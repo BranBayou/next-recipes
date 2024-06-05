@@ -1,9 +1,16 @@
-"use client";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useEffect, useState } from "react";
 
-export default function HomePage() {
+
+const getRecipes = async () => {
+  const response = await fetch("https://dummyjson.com/recipes");
+  const data = await response.json();
+  return data.recipes;
+};
+
+export default async function HomePage() {
+  const recipes = await getRecipes();
+
   const cuisines: Array<String> = [
     "All",
     "American",
@@ -16,18 +23,6 @@ export default function HomePage() {
     "Korean",
     "Mexican",
   ];
-
-  const [recipes, setRecipes] = useState([]);
-  useEffect(() => {
-    const getRecipes = async () => {
-     const response = await fetch("https://dummyjson.com/recipes");
-     const data = await response.json();
-     if(data) {
-      // console.log(data);
-      setRecipes(data.recipes);
-     }
-  };
-  getRecipes()},[])
 
 
   // const recipes = [
@@ -52,10 +47,10 @@ export default function HomePage() {
       {recipes.map((recipe, idx) => 
       <Card key={`${recipe.id}-${idx}`}>
         <CardHeader>
-          {/* img */}
+          <img src={recipe.image} alt={recipe.name} width={400} height={400}/>
         </CardHeader>
         <CardContent>
-          <p>{recipe.title}</p>
+          <p>{recipe.name}</p>
         </CardContent>
         <CardFooter>
           <p>{recipe.cuisine}</p>
